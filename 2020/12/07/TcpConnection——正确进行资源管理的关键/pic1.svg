@@ -7,13 +7,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="240mm"
-   viewBox="0 0 210 240"
-   version="1.1"
-   id="svg8"
+   sodipodi:docname="pic1.svg"
    inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   sodipodi:docname="pic1.svg">
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 210 270"
+   height="270mm"
+   width="210mm">
   <defs
      id="defs2">
     <marker
@@ -21,11 +21,11 @@
        orient="auto"
        refY="0"
        refX="0"
-       id="marker1397"
+       id="marker1785"
        style="overflow:visible"
        inkscape:isstock="true">
       <path
-         id="path1395"
+         id="path1783"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
          transform="matrix(-0.4,0,0,-0.4,-4,0)" />
@@ -34,7 +34,7 @@
        inkscape:collect="always"
        inkscape:isstock="true"
        style="overflow:visible"
-       id="marker895"
+       id="marker1397"
        refX="0"
        refY="0"
        orient="auto"
@@ -43,19 +43,19 @@
          transform="matrix(-0.4,0,0,-0.4,-4,0)"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         id="path893" />
+         id="path1395" />
     </marker>
     <marker
-       inkscape:collect="always"
        inkscape:stockid="Arrow1Mend"
        orient="auto"
        refY="0"
        refX="0"
-       id="marker1401"
+       id="marker895"
        style="overflow:visible"
-       inkscape:isstock="true">
+       inkscape:isstock="true"
+       inkscape:collect="always">
       <path
-         id="path1399"
+         id="path893"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
          transform="matrix(-0.4,0,0,-0.4,-4,0)" />
@@ -63,7 +63,7 @@
     <marker
        inkscape:isstock="true"
        style="overflow:visible"
-       id="marker1277"
+       id="marker1401"
        refX="0"
        refY="0"
        orient="auto"
@@ -73,58 +73,73 @@
          transform="matrix(-0.4,0,0,-0.4,-4,0)"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         id="path1275" />
+         id="path1399" />
     </marker>
     <marker
+       inkscape:collect="always"
        inkscape:stockid="Arrow1Mend"
        orient="auto"
        refY="0"
        refX="0"
+       id="marker1277"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1275"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
        id="marker1217"
-       style="overflow:visible"
-       inkscape:isstock="true"
-       inkscape:collect="always">
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend">
       <path
-         id="path1215"
-         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1215" />
     </marker>
     <marker
-       inkscape:stockid="Arrow1Mend"
-       orient="auto"
-       refY="0"
-       refX="0"
-       id="Arrow1Mend"
-       style="overflow:visible"
+       inkscape:collect="always"
        inkscape:isstock="true"
-       inkscape:collect="always">
+       style="overflow:visible"
+       id="Arrow1Mend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend">
       <path
-         id="path844"
-         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path844" />
     </marker>
   </defs>
   <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.9899495"
-     inkscape:cx="620.92417"
-     inkscape:cy="526.16905"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="false"
-     inkscape:window-width="2560"
-     inkscape:window-height="1506"
-     inkscape:window-x="-11"
+     inkscape:window-maximized="1"
      inkscape:window-y="-11"
-     inkscape:window-maximized="1" />
+     inkscape:window-x="-11"
+     inkscape:window-height="1506"
+     inkscape:window-width="2560"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="516.05134"
+     inkscape:cx="205.1912"
+     inkscape:zoom="1.4"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -138,249 +153,294 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="图层 1"
+     id="layer1"
      inkscape:groupmode="layer"
-     id="layer1">
+     inkscape:label="图层 1">
     <g
-       transform="translate(0,-41.804168)"
-       id="g1547">
+       transform="translate(0,-3.7041668)"
+       id="g1964">
       <rect
-         style="opacity:0.988532;fill:#ff6600;fill-opacity:0.317919;stroke-width:0.264999;stroke-linejoin:bevel;paint-order:stroke fill markers"
-         id="rect883"
-         width="169.1366"
-         height="81.153954"
-         x="25.637306"
-         y="142.60826"
-         ry="8.1264877"
-         rx="8.1264877" />
-      <rect
-         style="opacity:0.988532;fill:#e3e2db;fill-opacity:0.317919;stroke:#000000;stroke-width:0.264999;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke fill markers"
-         id="rect977"
-         width="170.03212"
-         height="174.42465"
-         x="24.856953"
-         y="92.251167"
-         rx="5.1026745"
-         ry="5.1026745" />
-      <rect
-         ry="8.4099703"
-         y="113.44847"
-         x="25.390219"
-         height="110.78591"
-         width="169.17845"
-         id="rect1373"
+         rx="8.4099712"
          style="opacity:0.988532;fill:#ffff00;fill-opacity:0.37291;stroke:#000000;stroke-width:0.3;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;paint-order:stroke fill markers"
-         rx="8.4099703" />
-      <path
-         id="path833"
-         d="M 6.992559,78.549192 H 85.454708 V 116.81567"
-         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.265, 0.529999;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1Mend)" />
-      <text
-         id="text1125"
-         y="63.908108"
-         x="9.2322683"
-         style="font-style:italic;font-size:8.35664px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         xml:space="preserve"><tspan
-           style="stroke-width:0.264583"
-           y="63.908108"
-           x="9.2322683"
-           id="tspan1123"
-           sodipodi:role="line">TCP disconnected</tspan></text>
-      <text
-         id="text1129"
-         y="75.106697"
-         x="22.510584"
-         style="font-style:italic;font-size:8.35664px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         xml:space="preserve"><tspan
-           style="stroke-width:0.264583"
-           y="75.106697"
-           x="22.510584"
-           id="tspan1127"
-           sodipodi:role="line">from peer</tspan></text>
-      <text
-         id="text1177"
-         y="123.84715"
-         x="54.719822"
-         style="font-style:italic;font-size:8.35664px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         xml:space="preserve"><tspan
-           id="tspan1179"
-           style="stroke-width:0.264583"
-           y="123.84715"
-           x="54.719822"
-           sodipodi:role="line" /></text>
-      <path
-         id="path1183"
-         d="m 85.382582,125.84689 v 10.53199 h -29.99618 v 10.39868"
-         style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1217)" />
-      <path
-         id="path1273"
-         d="m 85.373753,136.42755 h 31.595757 v 10.58643 19.76104 6.53249 9.83637"
-         style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1277)" />
-      <text
-         id="text1323"
-         y="152.08356"
-         x="36.375488"
-         style="font-style:italic;font-size:8.35664px;line-height:0;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         xml:space="preserve"><tspan
-           style="font-size:6.36579px;line-height:1;stroke-width:0.264583"
-           y="152.08356"
-           x="36.375488"
-           id="tspan1321"
-           sodipodi:role="line">Erase TcpConnectionPtr</tspan><tspan
-           id="tspan1325"
-           style="font-size:6.36579px;line-height:1;stroke-width:0.264583"
-           y="158.44934"
-           x="36.375488"
-           sodipodi:role="line">in TcpServer</tspan></text>
-      <text
-         id="text1365"
-         y="187.40448"
-         x="80.575752"
-         style="font-style:italic;font-size:8.35664px;line-height:0;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         xml:space="preserve"><tspan
-           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.36577px;line-height:1;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
-           y="187.40448"
-           x="80.575752"
-           id="tspan1363"
-           sodipodi:role="line">Extend life-circle</tspan><tspan
-           id="tspan1367"
-           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.36577px;line-height:1;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
-           y="193.77025"
-           x="80.575752"
-           sodipodi:role="line">of TcpConnection for secirity</tspan></text>
-      <text
-         id="text1371"
-         y="122.43469"
-         x="50.778278"
-         style="font-style:italic;font-size:6.36576px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         xml:space="preserve"><tspan
-           style="stroke-width:0.264583"
-           y="122.43469"
-           x="50.778278"
-           id="tspan1369"
-           sodipodi:role="line">Disable Channel event</tspan></text>
-      <text
-         id="text1377"
-         y="112.67524"
-         x="137.26932"
-         style="font-style:italic;font-size:4.87262px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         xml:space="preserve"><tspan
-           style="font-size:4.87262px;stroke-width:0.264583"
-           y="112.67524"
-           x="137.26932"
-           id="tspan1375"
-           sodipodi:role="line">Channel::handleClose</tspan></text>
-      <path
-         id="path1397"
-         d="m 55.241591,159.48238 v 7.73006 h 60.709179"
-         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.265, 0.265;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker1401)" />
-      <text
-         xml:space="preserve"
-         style="font-style:italic;font-size:4.37493px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         x="148.50717"
-         y="135.32349"
-         id="text887"><tspan
-           sodipodi:role="line"
-           id="tspan885"
-           x="148.50717"
-           y="135.32349"
-           style="font-size:4.37493px;stroke-width:0.264583">TcpServer::</tspan><tspan
-           sodipodi:role="line"
-           x="148.50717"
-           y="140.79214"
-           style="font-size:4.37493px;stroke-width:0.264583"
-           id="tspan889">removeConnection</tspan></text>
-      <path
-         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker895)"
-         d="m 117.27052,194.83321 v 14.51272"
-         id="path891" />
-      <text
-         xml:space="preserve"
-         style="font-style:italic;font-size:4.47943px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         x="92.588181"
-         y="248.45366"
-         id="text941"><tspan
-           sodipodi:role="line"
-           id="tspan939"
-           x="92.588181"
-           y="248.45366"
-           style="font-size:4.47943px;stroke-width:0.264583">Remove pollfds</tspan><tspan
-           sodipodi:role="line"
-           x="92.588181"
-           y="254.05295"
-           style="font-size:4.47943px;stroke-width:0.264583"
-           id="tspan943">and *Channel in Poller</tspan></text>
+         id="rect1373"
+         width="169.49641"
+         height="123.51118"
+         x="28.232895"
+         y="59.916859"
+         ry="8.4099703" />
       <rect
-         style="opacity:0.988532;fill:#ff0000;fill-opacity:0.317919;stroke-width:0.264999;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke fill markers"
-         id="rect945"
-         width="168.16257"
-         height="14.398169"
-         x="26.191952"
-         y="241.3196"
-         ry="5.1026788"
-         rx="5.1026788" />
+         ry="5.1026559"
+         rx="5.1026745"
+         y="49.468262"
+         x="29.034046"
+         height="202.58418"
+         width="168.52023"
+         id="rect977"
+         style="opacity:0.988532;fill:#e3e2db;fill-opacity:0.317919;stroke:#000000;stroke-width:0.264999;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke fill markers"
+         transform="matrix(1,0,-0.00175096,0.99999847,0,0)" />
+      <rect
+         style="opacity:0.988532;fill:#ff0000;fill-opacity:0.317919;stroke:#000000;stroke-width:0.3;stroke-linejoin:bevel;stroke-dasharray:0.899999, 0.3;paint-order:stroke fill markers"
+         id="rect1029"
+         width="168.83028"
+         height="112.82167"
+         x="28.463743"
+         y="70.191177"
+         rx="5.1026745"
+         ry="5.102675" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.265, 0.529999;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+         d="M 5.9234809,36.611389 H 84.38563 v 38.266478"
+         id="path833" />
       <text
          xml:space="preserve"
-         style="font-style:italic;font-size:4.47943px;line-height:1;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         x="141.88206"
-         y="236.06699"
-         id="text949"><tspan
+         style="font-style:italic;font-size:8.35664px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         x="8.1631899"
+         y="21.970304"
+         id="text1125"><tspan
            sodipodi:role="line"
-           id="tspan947"
-           x="141.88206"
-           y="236.06699"
-           style="font-size:4.47943px;stroke-width:0.264583">TcpConnection::</tspan><tspan
-           sodipodi:role="line"
-           x="141.88206"
-           y="240.54642"
-           style="font-size:4.47943px;stroke-width:0.264583"
-           id="tspan951">connectionDestroyed</tspan></text>
+           id="tspan1123"
+           x="8.1631899"
+           y="21.970304"
+           style="stroke-width:0.264583">TCP disconnected</tspan></text>
       <text
          xml:space="preserve"
+         style="font-style:italic;font-size:8.35664px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         x="21.441505"
+         y="33.168896"
+         id="text1129"><tspan
+           sodipodi:role="line"
+           id="tspan1127"
+           x="21.441505"
+           y="33.168896"
+           style="stroke-width:0.264583">from peer</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:8.35664px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         x="53.650745"
+         y="81.909348"
+         id="text1177"><tspan
+           sodipodi:role="line"
+           x="53.650745"
+           y="81.909348"
+           style="stroke-width:0.264583"
+           id="tspan1179" /></text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1217)"
+         d="m 84.313504,83.909087 v 10.53199 h -29.99618 v 10.398683"
+         id="path1183" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1277)"
+         d="m 84.304675,94.489747 h 31.595755 v 10.586433 19.76104 6.53249 9.83637"
+         id="path1273" />
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:8.35664px;line-height:0;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         x="35.306412"
+         y="110.14575"
+         id="text1323"><tspan
+           sodipodi:role="line"
+           id="tspan1321"
+           x="35.306412"
+           y="110.14575"
+           style="font-size:6.36579px;line-height:1;stroke-width:0.264583">Erase TcpConnectionPtr</tspan><tspan
+           sodipodi:role="line"
+           x="35.306412"
+           y="116.51154"
+           style="font-size:6.36579px;line-height:1;stroke-width:0.264583"
+           id="tspan1325">in TcpServer</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:8.35664px;line-height:0;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         x="79.506676"
+         y="145.46667"
+         id="text1365"><tspan
+           sodipodi:role="line"
+           id="tspan1363"
+           x="79.506676"
+           y="145.46667"
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.36577px;line-height:1;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583">Extend life-circle</tspan><tspan
+           sodipodi:role="line"
+           x="79.506676"
+           y="151.83244"
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.36577px;line-height:1;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+           id="tspan1367">of TcpConnection for secirity</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:6.36576px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         x="49.709202"
+         y="80.496887"
+         id="text1371"><tspan
+           sodipodi:role="line"
+           id="tspan1369"
+           x="49.709202"
+           y="80.496887"
+           style="stroke-width:0.264583">Disable Channel event</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:4.87262px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         x="136.20024"
+         y="58.566631"
+         id="text1377"><tspan
+           sodipodi:role="line"
+           id="tspan1375"
+           x="136.20024"
+           y="58.566631"
+           style="font-size:4.87262px;stroke-width:0.264583">Channel::handleEvent</tspan></text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.265, 0.265;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker1401)"
+         d="m 54.172513,117.54458 v 7.73006 h 60.709177"
+         id="path1397" />
+      <text
+         id="text887"
+         y="93.385681"
+         x="147.4381"
+         style="font-style:italic;font-size:4.37493px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         xml:space="preserve"><tspan
+           style="font-size:4.37493px;stroke-width:0.264583"
+           y="93.385681"
+           x="147.4381"
+           id="tspan885"
+           sodipodi:role="line">TcpServer::</tspan><tspan
+           id="tspan889"
+           style="font-size:4.37493px;stroke-width:0.264583"
+           y="98.854347"
+           x="147.4381"
+           sodipodi:role="line">removeConnection</tspan></text>
+      <path
+         id="path891"
+         d="m 116.20144,152.89541 v 14.51272"
+         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker895)" />
+      <text
+         id="text941"
+         y="206.51585"
+         x="91.519104"
          style="font-style:italic;font-size:4.47943px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         x="153.77388"
-         y="90.118103"
-         id="text981"><tspan
-           sodipodi:role="line"
-           id="tspan979"
-           x="153.77388"
-           y="90.118103"
-           style="font-size:4.47943px;stroke-width:0.264583">EventLoop::loop</tspan></text>
+         xml:space="preserve"><tspan
+           style="font-size:4.47943px;stroke-width:0.264583"
+           y="206.51585"
+           x="91.519104"
+           id="tspan939"
+           sodipodi:role="line">Remove pollfds</tspan><tspan
+           id="tspan943"
+           style="font-size:4.47943px;stroke-width:0.264583"
+           y="212.11514"
+           x="91.519104"
+           sodipodi:role="line">and *Channel in Poller</tspan></text>
       <rect
          rx="5.1026788"
          ry="5.1026788"
-         y="209.56956"
-         x="26.191952"
+         y="199.38179"
+         x="28.827038"
          height="14.398169"
          width="168.16257"
-         id="rect1381"
-         style="opacity:0.988532;fill:#ff2a2a;fill-opacity:0.317919;stroke-width:0.264999;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke fill markers" />
+         id="rect945"
+         style="opacity:0.988532;fill:#ff0000;fill-opacity:0.317919;stroke-width:0.264999;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke fill markers" />
+      <text
+         id="text949"
+         y="194.12918"
+         x="140.81299"
+         style="font-style:italic;font-size:4.47943px;line-height:1;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         xml:space="preserve"><tspan
+           style="font-size:4.47943px;stroke-width:0.264583"
+           y="194.12918"
+           x="140.81299"
+           id="tspan947"
+           sodipodi:role="line">TcpConnection::</tspan><tspan
+           id="tspan951"
+           style="font-size:4.47943px;stroke-width:0.264583"
+           y="198.60861"
+           x="140.81299"
+           sodipodi:role="line">connectionDestroyed</tspan></text>
+      <text
+         id="text981"
+         y="48.180302"
+         x="152.7048"
+         style="font-style:italic;font-size:4.47943px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         xml:space="preserve"><tspan
+           style="font-size:4.47943px;stroke-width:0.264583"
+           y="48.180302"
+           x="152.7048"
+           id="tspan979"
+           sodipodi:role="line">EventLoop::loop</tspan></text>
+      <text
+         id="text1385"
+         y="176.9104"
+         x="32.287334"
+         style="font-style:italic;font-size:4.23333px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         xml:space="preserve"><tspan
+           style="font-size:4.23333px;stroke-width:0.264583"
+           y="176.9104"
+           x="32.287334"
+           id="tspan1383"
+           sodipodi:role="line">(This is the old life-cycle of TcpConnection, but now it extends.)</tspan></text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1397)"
+         d="m 116.20144,183.58709 v 14.51272"
+         id="path1393" />
+      <text
+         id="text1467"
+         y="108.87469"
+         x="57.139256"
+         style="font-style:italic;font-size:5.92315px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.264583"
+           y="108.87469"
+           x="57.139256"
+           id="tspan1465"
+           sodipodi:role="line" /></text>
+      <rect
+         rx="8.1264877"
+         ry="8.1264877"
+         y="102.27408"
+         x="28.592712"
+         height="81.153954"
+         width="169.1366"
+         id="rect883"
+         style="opacity:0.988532;fill:#ff0000;fill-opacity:0.317919;stroke:#000000;stroke-width:0.265;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:0.1325, 0.1325;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers" />
       <text
          xml:space="preserve"
          style="font-style:italic;font-size:4.23333px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         x="33.356411"
-         y="218.84821"
-         id="text1385"><tspan
+         x="132.14056"
+         y="68.602676"
+         id="text1669"><tspan
            sodipodi:role="line"
-           id="tspan1383"
-           x="33.356411"
-           y="218.84821"
-           style="font-size:4.23333px;stroke-width:0.264583">(This is the old life-cycle of TcpConnection, but now it extends.)</tspan></text>
+           id="tspan1667"
+           x="132.14056"
+           y="68.602676"
+           style="font-size:4.23333px;stroke-width:0.264583">TcpConnection::handleClose</tspan></text>
+      <rect
+         style="opacity:1;fill:#3e53bc;fill-opacity:0.595376;stroke-width:0.264999;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke fill markers"
+         id="rect1381"
+         width="168.16257"
+         height="14.398169"
+         x="28.592712"
+         y="169.02988"
+         ry="5.1026788"
+         rx="5.1026788" />
       <path
-         id="path1393"
-         d="m 117.27052,225.52489 v 14.51272"
-         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1397)" />
+         id="path1781"
+         d="m 116.20144,214.03307 v 14.51272"
+         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1785)" />
+      <rect
+         rx="5.1026788"
+         ry="5.1026788"
+         y="228.29651"
+         x="28.592712"
+         height="14.398169"
+         width="168.16257"
+         id="rect1861"
+         style="opacity:1;fill:#3e53bc;fill-opacity:0.595376;stroke-width:0.264999;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke fill markers" />
       <text
          xml:space="preserve"
-         style="font-style:italic;font-size:5.92315px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
-         x="58.208332"
-         y="150.8125"
-         id="text1467"><tspan
+         style="font-style:italic;font-size:4.23333px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Italic';stroke-width:0.264583"
+         x="40.972618"
+         y="237.74701"
+         id="text1871"><tspan
            sodipodi:role="line"
-           id="tspan1465"
-           x="58.208332"
-           y="150.8125"
-           style="stroke-width:0.264583" /></text>
+           id="tspan1869"
+           x="40.972618"
+           y="237.74701"
+           style="font-size:4.23333px;stroke-width:0.264583">Reference count of TcpConnectionPtr is 0 now, dtor happends</tspan></text>
     </g>
   </g>
 </svg>

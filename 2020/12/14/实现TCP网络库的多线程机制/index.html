@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wcsjdzz.github.io/2020/12/14/%E5%AE%9E%E7%8E%B0TCP%E7%BD%91%E7%BB%9C%E5%BA%93%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6/final.svg">
 <meta property="article:published_time" content="2020-12-14T12:57:21.000Z">
-<meta property="article:modified_time" content="2020-12-22T14:47:36.246Z">
+<meta property="article:modified_time" content="2020-12-23T05:03:59.044Z">
 <meta property="article:author" content="老杜振熙">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://wcsjdzz.github.io/2020/12/14/%E5%AE%9E%E7%8E%B0TCP%E7%BD%91%E7%BB%9C%E5%BA%93%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6/final.svg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://wcsjdzz.github.io/2020/12/14/%E5%AE%9E%E7%8E%B0TCP%E7%BD%91%E7%BB%9C%E5%BA%93%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
@@ -78,7 +78,7 @@ var saveToLocal = {
   isHome: false,
   isHighlightShrink: true,
   isToc: true,
-  postUpdate: '2020-12-22 06:47:36'
+  postUpdate: '2020-12-22 21:03:59'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -143,7 +143,7 @@ if (asideStatus !== undefined) {
    } else {
      document.documentElement.classList.remove('hide-aside')
    }
-}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/2020/12/14/%E5%AE%9E%E7%8E%B0TCP%E7%BD%91%E7%BB%9C%E5%BA%93%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6/final.svg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Blooooog~</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">实现TCP网络库的多线程机制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-12-14T12:57:21.000Z" title="发表于 2020-12-14 04:57:21">2020-12-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-12-22T14:47:36.246Z" title="更新于 2020-12-22 06:47:36">2020-12-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C-net-programming/">C++ net programming</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>如何实现一个网络库的多线程机制？实际上，并不需要各种繁杂的锁机制。先用一句话来阐述核心思想：以<strong>函数执行线程的转移</strong>作为实现线程安全的机制。<br>具体来说，分为如下几点：</p>
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/2020/12/14/%E5%AE%9E%E7%8E%B0TCP%E7%BD%91%E7%BB%9C%E5%BA%93%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6/final.svg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Blooooog~</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">实现TCP网络库的多线程机制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-12-14T12:57:21.000Z" title="发表于 2020-12-14 04:57:21">2020-12-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-12-23T05:03:59.044Z" title="更新于 2020-12-22 21:03:59">2020-12-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C-net-programming/">C++ net programming</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>如何实现一个网络库的多线程机制？实际上，并不需要各种繁杂的锁机制。先用一句话来阐述核心思想：以<strong>函数执行线程的转移</strong>作为实现线程安全的机制。<br>具体来说，分为如下几点：</p>
 <ul>
 <li>one loop per thread : 其中的每个线程均和一个独立的 EventLoop 关联</li>
 <li>EventLoopThreadPool : 线程池，从池中取出一个新的线程，等价于取出一个新的 EventLoop</li>
@@ -159,7 +159,7 @@ if (asideStatus !== undefined) {
 </ul>
 </li>
 </ul>
-<p>下面以<a href="final.svg">图 1</a>为例，解释一下一个多线程服务器建立 TCP 连接的整个流程机制。</p>
+<p>下面以<img src="/2020/12/14/%E5%AE%9E%E7%8E%B0TCP%E7%BD%91%E7%BB%9C%E5%BA%93%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6/final.svg" alt="图 1">为例，解释一下一个多线程服务器建立 TCP 连接的整个流程机制。</p>
 <ol>
 <li>Server 线程一直监听自己的端口；</li>
 <li>某一个时刻，网络对端发来了一个 TCP 连接请求；</li>

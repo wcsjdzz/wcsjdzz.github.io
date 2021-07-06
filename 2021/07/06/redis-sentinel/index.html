@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>redis sentinel | Blooooog~</title><meta name="keywords" content="Redis"><meta name="author" content="老杜振熙"><meta name="copyright" content="老杜振熙"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="初始 作用可以监视主服务器、从服务器等多种服务器，甚至还可以监视其他的sentinel服务器；  sentinel服务器和普通服务器的区别sentinel服务器不使用数据库，因此初始化的时候不需要RDB或者AOF文件；另外，包括一些操作键值对的命令（SET等），发布订阅，脚本，事务等功能，sentinel服务器均不使用；sentinel服务器的命令表中也并没有存储这些命令；客户端可以对sentin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis sentinel">
+<meta property="og:url" content="https://wcsjdzz.github.io/2021/07/06/redis-sentinel/index.html">
+<meta property="og:site_name" content="Blooooog~">
+<meta property="og:description" content="初始 作用可以监视主服务器、从服务器等多种服务器，甚至还可以监视其他的sentinel服务器；  sentinel服务器和普通服务器的区别sentinel服务器不使用数据库，因此初始化的时候不需要RDB或者AOF文件；另外，包括一些操作键值对的命令（SET等），发布订阅，脚本，事务等功能，sentinel服务器均不使用；sentinel服务器的命令表中也并没有存储这些命令；客户端可以对sentin">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wcsjdzz.github.io/img/doc-cover.svg">
+<meta property="article:published_time" content="2021-07-06T05:50:21.000Z">
+<meta property="article:modified_time" content="2021-07-06T05:50:40.274Z">
+<meta property="article:author" content="老杜振熙">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wcsjdzz.github.io/img/doc-cover.svg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://wcsjdzz.github.io/2021/07/06/redis-sentinel/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2021-07-06 13:50:40'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/doc-cover.svg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Blooooog~</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">redis sentinel</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-06T05:50:21.000Z" title="发表于 2021-07-06 13:50:21">2021-07-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-07-06T05:50:40.274Z" title="更新于 2021-07-06 13:50:40">2021-07-06</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="初始"><a href="#初始" class="headerlink" title="初始"></a>初始</h3><ol>
+<li><p>作用<br>可以监视主服务器、从服务器等多种服务器，甚至还可以监视其他的sentinel服务器；</p>
+</li>
+<li><p>sentinel服务器和普通服务器的区别<br>sentinel服务器不使用数据库，因此初始化的时候不需要RDB或者AOF文件；另外，包括一些操作键值对的命令（<code>SET</code>等），发布订阅，脚本，事务等功能，sentinel服务器均不使用；sentinel服务器的命令表中也并没有存储这些命令；客户端可以对sentinel服务器使用的命令仅包括：<code>PING</code>, <code>SENTINEL</code>, <code>INFO</code>, <code>SUBSCRIBE</code>, <code>UNSUBSCRIBE</code>, <code>PSUBSCRIBE</code>, <code>PUNSUBSCRIBE</code>；（新版本中可能会有增加）</p>
+</li>
+<li><p>命令连接和订阅连接<br>sentinel服务器需要和每一个由它监视的主（从）服务器创建2个连接，分别是<em>命令连接</em>和<em>订阅连接</em>。命令连接的作用是向主（从）服务器发送命令以及接收相应的回复；订阅连接的作用是订阅主（从）服务器的<strong>sentinel</strong>:hello频道，避免频道发送的信息丢失；</p>
+</li>
+</ol>
+<h3 id="监视网络"><a href="#监视网络" class="headerlink" title="监视网络"></a>监视网络</h3><ol>
+<li><p><code>dict *masters</code>和<code>dict *slaves</code>字典<br><code>dict *masters</code>就是sentinel服务器所监视的所有redis服务器（键为服务器名，值是指向sentinelRedisInstance结构体的指针，该结构体保存着各类信息）；sentinel服务器定期通过<em>命令连接</em>向其监控的master服务器发送INFO命令，返回的信息中会包含master服务器本身的信息（如run id），以及其附属的slave服务器，根据这些信息，sentinel分别创建包含master和slave服务器的底层结构（两个字典，分别代表master和slave，key就是服务器的地址，value是一个特制的数据结构，代表一个服务器实例结构）</p>
+</li>
+<li><p><code>dict *sentinels</code>字典<br>sentinel通过<em>命令连接</em>向__sentinel__:hello频道发送消息，通过<em>订阅连接</em>从__sentinel__:hello接收消息。不仅如此，如果有多个sentinel监视着同一个服务器，那么各个服务器还可以通过从频道接收到的信息感知到其他sentinel的存在，并加到服务器的实例结构的<code>dict *sentinels</code>字段中。相互感知到对方存在的sentinel会共同建立命令连接（注意，没有订阅连接），形成网络；</p>
+</li>
+<li><p>主观下线和客观下线<br>sentinel会定期向其监视的服务器发送PING命令，探测回复是否有效（有效信息包括“+PONG”, “-LOADING”, “MASTERDOWN”），如果无效或无响应，则认为其主观下线；当判断某个服务器主观下线以后，sentinel会和其他sentinel通信，询问其他sentinel是否认为该服务器主观下线，如果票数足够多，则认为其<strong>客观下线</strong>，并执行故障转移操作；（注意，“客观下线”也是一种主观标准，前面说的“票数”，是通过配置文件进行配置的，而各个sentinel的配置文件可能不一样。举个例子，对于sentinel1来说，可能票数为2的时候，就认为服务器客观下线，而对于sentinel2，可能票数为5时，才认为这个服务器客观下线）</p>
+</li>
+<li><p>领头sentinel<br>当sentinel认为某个服务器客观下线之后，监视这个服务器的所有sentinel就会互相发送命令选举出领头sentinel。具体方式也很简单，就是先到先得，某个sentinel发送命令，要求其他sentinel投他一票，其他sentinel的票数是先到先得的。最终，如果某个sentinel得到的票数超过一半，就成为最终的领头sentinel。领头sentinel的作用就是<strong>执行故障转移</strong>。</p>
+</li>
+<li><p>故障转移<br>就是挑选出一个从服务器变为主服务器，将有故障的主服务器在正常之后转为从服务器，其他从服务器都改为复制新的主服务器；</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">老杜振熙</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wcsjdzz.github.io/2021/07/06/redis-sentinel/">https://wcsjdzz.github.io/2021/07/06/redis-sentinel/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wcsjdzz.github.io" target="_blank">Blooooog~</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Redis/">Redis</a></div><div class="post_share"><div class="social-share" data-image="/img/doc-cover.svg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/07/06/nginx-%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/"><img class="prev-cover" src="/img/doc-cover.svg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">nginx - 指令执行顺序</div></div></a></div><div class="next-post pull-right"><a href="/2021/07/06/redis-cluster/"><img class="next-cover" src="/img/doc-cover.svg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">redis cluster</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/07/06/redis-cluster/" title="redis cluster"><img class="cover" src="/img/doc-cover.svg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-06</div><div class="title">redis cluster</div></div></a></div><div><a href="/2021/07/06/redisServer/" title="redisServer"><img class="cover" src="/img/doc-cover.svg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-06</div><div class="title">redisServer</div></div></a></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/null" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">老杜振熙</div><div class="author-info__description">或许在此处可以找到你我想要的东西</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wcsjdzz"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">Next plan - http server based on net library</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B"><span class="toc-number">1.</span> <span class="toc-text">初始</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%91%E8%A7%86%E7%BD%91%E7%BB%9C"><span class="toc-number">2.</span> <span class="toc-text">监视网络</span></a></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/%E5%85%B3%E4%BA%8E%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%80%BC%E5%AF%BB%E6%89%BE%E9%97%AE%E9%A2%98/" title="关于旋转数组的最值寻找问题"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="关于旋转数组的最值寻找问题"/></a><div class="content"><a class="title" href="/2021/07/06/%E5%85%B3%E4%BA%8E%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%80%BC%E5%AF%BB%E6%89%BE%E9%97%AE%E9%A2%98/" title="关于旋转数组的最值寻找问题">关于旋转数组的最值寻找问题</a><time datetime="2021-07-06T05:54:22.000Z" title="发表于 2021-07-06 13:54:22">2021-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/redisServer/" title="redisServer"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="redisServer"/></a><div class="content"><a class="title" href="/2021/07/06/redisServer/" title="redisServer">redisServer</a><time datetime="2021-07-06T05:53:26.000Z" title="发表于 2021-07-06 13:53:26">2021-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/cmake-local-variable-%E4%BB%A5%E5%8F%8Acache-variable/" title="cmake - local variable 以及cache variable"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="cmake - local variable 以及cache variable"/></a><div class="content"><a class="title" href="/2021/07/06/cmake-local-variable-%E4%BB%A5%E5%8F%8Acache-variable/" title="cmake - local variable 以及cache variable">cmake - local variable 以及cache variable</a><time datetime="2021-07-06T05:52:46.000Z" title="发表于 2021-07-06 13:52:46">2021-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/nginx-variable/" title="nginx - variable"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nginx - variable"/></a><div class="content"><a class="title" href="/2021/07/06/nginx-variable/" title="nginx - variable">nginx - variable</a><time datetime="2021-07-06T05:52:12.000Z" title="发表于 2021-07-06 13:52:12">2021-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/nginx-%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/" title="nginx - 指令执行顺序"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nginx - 指令执行顺序"/></a><div class="content"><a class="title" href="/2021/07/06/nginx-%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/" title="nginx - 指令执行顺序">nginx - 指令执行顺序</a><time datetime="2021-07-06T05:51:36.000Z" title="发表于 2021-07-06 13:51:36">2021-07-06</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By 老杜振熙</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

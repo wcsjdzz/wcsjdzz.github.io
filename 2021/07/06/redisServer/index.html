@@ -1,0 +1,158 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>redisServer | Blooooog~</title><meta name="keywords" content="Redis"><meta name="author" content="老杜振熙"><meta name="copyright" content="老杜振熙"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="命令执行过程在服务端，跟服务器连接的所有客户端都对应一个redisClient结构体；当服务器接收到某个客户端发来的命令请求时，先将字符串存到对应的redisClient结构体的缓冲区中，然后调用分析器进行分析，提取出对于的argv和argc；然后根据argv[0]到命令表中查找对应的执行函数，进行执行（命令表是一个字典，key就是命令名，比如SET，value就是对应的redisCommand结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redisServer">
+<meta property="og:url" content="https://wcsjdzz.github.io/2021/07/06/redisServer/index.html">
+<meta property="og:site_name" content="Blooooog~">
+<meta property="og:description" content="命令执行过程在服务端，跟服务器连接的所有客户端都对应一个redisClient结构体；当服务器接收到某个客户端发来的命令请求时，先将字符串存到对应的redisClient结构体的缓冲区中，然后调用分析器进行分析，提取出对于的argv和argc；然后根据argv[0]到命令表中查找对应的执行函数，进行执行（命令表是一个字典，key就是命令名，比如SET，value就是对应的redisCommand结">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wcsjdzz.github.io/img/doc-cover.svg">
+<meta property="article:published_time" content="2021-07-06T05:53:26.000Z">
+<meta property="article:modified_time" content="2021-07-06T05:53:42.554Z">
+<meta property="article:author" content="老杜振熙">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wcsjdzz.github.io/img/doc-cover.svg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://wcsjdzz.github.io/2021/07/06/redisServer/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2021-07-06 13:53:42'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/doc-cover.svg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Blooooog~</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">redisServer</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-06T05:53:26.000Z" title="发表于 2021-07-06 13:53:26">2021-07-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-07-06T05:53:42.554Z" title="更新于 2021-07-06 13:53:42">2021-07-06</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="命令执行过程"><a href="#命令执行过程" class="headerlink" title="命令执行过程"></a>命令执行过程</h3><p>在服务端，跟服务器连接的所有客户端都对应一个<code>redisClient</code>结构体；当服务器接收到某个客户端发来的命令请求时，先将字符串存到对应的<code>redisClient</code>结构体的缓冲区中，然后调用分析器进行分析，提取出对于的<code>argv</code>和<code>argc</code>；然后根据<code>argv[0]</code>到<strong>命令表</strong>中查找对应的执行函数，进行执行（命令表是一个字典，key就是命令名，比如<code>SET</code>，value就是对应的<code>redisCommand</code>结构体，保存了函数指针，所需参数个数，等信息），当然，执行之前还需要进行检查，比如权限是否匹配，输入参数是否有效等等。</p>
+<p>执行完毕后，将执行结果保存在<code>redisClient</code>的缓冲区中，随后向客户端所关联的socket发送信息即可。</p>
+<h3 id="serverCron函数"><a href="#serverCron函数" class="headerlink" title="serverCron函数"></a>serverCron函数</h3><p>cron是时辰的意思，意味着这个函数需要定期执行，它的目的是管理服务器的资源，保证其良好运行。资源管理会涉及到很多方面的细节：</p>
+<ul>
+<li>服务器状态的时间缓存会得到更新，这是一个不太精确的时刻；</li>
+<li>服务器的LRU时钟<code>unsigned lruclock</code>会得到更新，该变量用于计算服务器中各个redis对象的空转时间（因为每个redis对象拥有一个变量，用于存储该对象最近一次访问对应的时间）；</li>
+<li>服务器每秒钟的命令执行次数会得到更新；底层实现是：服务器会保存上一次执行<code>serverCron</code>函数时对应的时刻，以及自己已经执行的命令总次数；当本次执行cron时，作差求平均即可；服务器会默认保存16个这样的平均值，最后再求平均，即得到每秒钟命令执行次数；</li>
+<li>服务器的内存使用峰值会得到更新；</li>
+<li>为SIGTERM信号重新分配响应函数，即先生成RDB，再终止程序；</li>
+<li>保证持久化程序的正常运行；</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">老杜振熙</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wcsjdzz.github.io/2021/07/06/redisServer/">https://wcsjdzz.github.io/2021/07/06/redisServer/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wcsjdzz.github.io" target="_blank">Blooooog~</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Redis/">Redis</a></div><div class="post_share"><div class="social-share" data-image="/img/doc-cover.svg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/07/06/%E5%85%B3%E4%BA%8E%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%80%BC%E5%AF%BB%E6%89%BE%E9%97%AE%E9%A2%98/"><img class="prev-cover" src="/img/doc-cover.svg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">关于旋转数组的最值寻找问题</div></div></a></div><div class="next-post pull-right"><a href="/2021/07/06/cmake-local-variable-%E4%BB%A5%E5%8F%8Acache-variable/"><img class="next-cover" src="/img/doc-cover.svg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">cmake - local variable 以及cache variable</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/07/06/redis-cluster/" title="redis cluster"><img class="cover" src="/img/doc-cover.svg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-06</div><div class="title">redis cluster</div></div></a></div><div><a href="/2021/07/06/redis-sentinel/" title="redis sentinel"><img class="cover" src="/img/doc-cover.svg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-06</div><div class="title">redis sentinel</div></div></a></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/null" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">老杜振熙</div><div class="author-info__description">或许在此处可以找到你我想要的东西</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wcsjdzz"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">Next plan - http server based on net library</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">命令执行过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#serverCron%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">serverCron函数</span></a></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/%E5%85%B3%E4%BA%8E%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%80%BC%E5%AF%BB%E6%89%BE%E9%97%AE%E9%A2%98/" title="关于旋转数组的最值寻找问题"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="关于旋转数组的最值寻找问题"/></a><div class="content"><a class="title" href="/2021/07/06/%E5%85%B3%E4%BA%8E%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%80%BC%E5%AF%BB%E6%89%BE%E9%97%AE%E9%A2%98/" title="关于旋转数组的最值寻找问题">关于旋转数组的最值寻找问题</a><time datetime="2021-07-06T05:54:22.000Z" title="发表于 2021-07-06 13:54:22">2021-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/redisServer/" title="redisServer"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="redisServer"/></a><div class="content"><a class="title" href="/2021/07/06/redisServer/" title="redisServer">redisServer</a><time datetime="2021-07-06T05:53:26.000Z" title="发表于 2021-07-06 13:53:26">2021-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/cmake-local-variable-%E4%BB%A5%E5%8F%8Acache-variable/" title="cmake - local variable 以及cache variable"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="cmake - local variable 以及cache variable"/></a><div class="content"><a class="title" href="/2021/07/06/cmake-local-variable-%E4%BB%A5%E5%8F%8Acache-variable/" title="cmake - local variable 以及cache variable">cmake - local variable 以及cache variable</a><time datetime="2021-07-06T05:52:46.000Z" title="发表于 2021-07-06 13:52:46">2021-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/nginx-variable/" title="nginx - variable"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nginx - variable"/></a><div class="content"><a class="title" href="/2021/07/06/nginx-variable/" title="nginx - variable">nginx - variable</a><time datetime="2021-07-06T05:52:12.000Z" title="发表于 2021-07-06 13:52:12">2021-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/nginx-%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/" title="nginx - 指令执行顺序"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nginx - 指令执行顺序"/></a><div class="content"><a class="title" href="/2021/07/06/nginx-%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/" title="nginx - 指令执行顺序">nginx - 指令执行顺序</a><time datetime="2021-07-06T05:51:36.000Z" title="发表于 2021-07-06 13:51:36">2021-07-06</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By 老杜振熙</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

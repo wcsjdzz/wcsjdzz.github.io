@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>an_introduction_to_gcc.md | Blooooog~</title><meta name="keywords" content="gcc"><meta name="author" content="老杜振熙"><meta name="copyright" content="老杜振熙"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="Convention compilation: 从源代码到机器码的所有过程的总称 include path: 头文件搜索路径 liarary search path(或者link path): 库文件搜索路径  Compiling a C program警告相关 -Wall: 开启所有常用的编译警告, __推荐任何情况下都加上该option__。当有警告信息输出时，信息的格式为file:row-n">
+<meta property="og:type" content="article">
+<meta property="og:title" content="an_introduction_to_gcc.md">
+<meta property="og:url" content="https://wcsjdzz.github.io/2021/08/09/an-introduction-to-gcc-md/index.html">
+<meta property="og:site_name" content="Blooooog~">
+<meta property="og:description" content="Convention compilation: 从源代码到机器码的所有过程的总称 include path: 头文件搜索路径 liarary search path(或者link path): 库文件搜索路径  Compiling a C program警告相关 -Wall: 开启所有常用的编译警告, __推荐任何情况下都加上该option__。当有警告信息输出时，信息的格式为file:row-n">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wcsjdzz.github.io/img/doc-cover.svg">
+<meta property="article:published_time" content="2021-08-09T12:42:04.000Z">
+<meta property="article:modified_time" content="2021-08-10T11:19:01.574Z">
+<meta property="article:author" content="老杜振熙">
+<meta property="article:tag" content="gcc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wcsjdzz.github.io/img/doc-cover.svg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://wcsjdzz.github.io/2021/08/09/an-introduction-to-gcc-md/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2021-08-10 19:19:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/doc-cover.svg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Blooooog~</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">an_introduction_to_gcc.md</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-08-09T12:42:04.000Z" title="发表于 2021-08-09 20:42:04">2021-08-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-08-10T11:19:01.574Z" title="更新于 2021-08-10 19:19:01">2021-08-10</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Convention"><a href="#Convention" class="headerlink" title="Convention"></a>Convention</h1><ul>
+<li><code>compilation</code>: 从源代码到机器码的所有过程的总称</li>
+<li><code>include path</code>: 头文件搜索路径</li>
+<li><code>liarary search path</code>(或者<code>link path</code>): 库文件搜索路径</li>
+</ul>
+<h1 id="Compiling-a-C-program"><a href="#Compiling-a-C-program" class="headerlink" title="Compiling a C program"></a>Compiling a C program</h1><h2 id="警告相关"><a href="#警告相关" class="headerlink" title="警告相关"></a>警告相关</h2><ul>
+<li><code>-Wall</code>: 开启所有常用的编译警告, __推荐任何情况下都加上该option__。当有警告信息输出时，信息的格式为<code>file:row-number:column-number:message</code></li>
+</ul>
+<h2 id="Compiling-files-independently"><a href="#Compiling-files-independently" class="headerlink" title="Compiling files independently"></a>Compiling files independently</h2><blockquote>
+<p>In general, linking is faster than compilation—in a large project with many source files, recompiling only those that have been modified can make a significant saving. The process of recompiling only the modified files in a project can be automated using GNU <code>Make</code></p>
+</blockquote>
+<ul>
+<li><strong>意义</strong>: 避免了每一次都从头开始进行全部的编译</li>
+<li><code>object file</code>: 也是机器码，只不过任何其他文件中的function或者variable的地址都被留空(left undefined)</li>
+<li><code>-c</code>: 为某个源文件生成object file, 例如<code>gcc -Wall -c main.c</code>会生成<code>main.o</code></li>
+</ul>
+<h2 id="Linking-with-external-libraries"><a href="#Linking-with-external-libraries" class="headerlink" title="Linking with external libraries"></a>Linking with external libraries</h2><ul>
+<li><code>/tmp/xxx.o ... undefined reference</code>: 出现了链接错误，这里的<code>/tmp/xxx.o</code>就是编译器自动生成的临时object file。(xxx.o这个名字是我自己瞎取的)</li>
+<li><code>-lNAME</code>: 让链接器尝试从静态库<code>libNAME.a</code>中获取有用的符号</li>
+</ul>
+<h1 id="Compilation-options"><a href="#Compilation-options" class="headerlink" title="Compilation options"></a>Compilation options</h1><h2 id="Setting-search-paths"><a href="#Setting-search-paths" class="headerlink" title="Setting search paths"></a>Setting search paths</h2><blockquote>
+<p>Note that you should never place the absolute paths of header files in #include statements in your source code, as this will prevent the program from compiling on other systems.</p>
+</blockquote>
+<ul>
+<li><code>-I</code>: 增加include path, 实际上就是影响了<code>INCLUDE_PATH</code>这个变量的值</li>
+<li><code>-L</code>: 增加library search path</li>
+<li><strong>environment variable</strong>: 也可以通过在shell中修改<code>C_INCLUDE_PATH</code>, <code>CPLUS_INCLUDE_PATH</code>, <code>LIBRARY_PATH</code>这几个变量去增添搜索路径</li>
+<li>同时指定多个路径：<ul>
+<li><strong>command line</strong>: 例如<code>-I. -I/opt/gdbm-1.8.3/include -I/net/include</code></li>
+<li><strong>environment variable</strong>: 例如<code>C_INCLUDE_PATH=.:/opt/gdbm-1.8.3/include:/net/include</code>, 用<code>:</code>进行分隔</li>
+<li>其实，如果不想写了完整的CMakeLists.txt之后再用<code>compile_commands.json</code>实现vim的跳转的话，可以事先配置一个环境变量<code>CPLUS_INCLUDE_PATH</code>，加入需要搜索的路径，然后<code>export CPLUS_INCLUDE_PATH</code>，vim（clangd）就知道需要在哪里搜索头文件了。</li>
+</ul>
+</li>
+<li>路径的搜索顺序：先搜索通过<code>-I</code>或<code>-L</code>指定的路径；再搜索通过environment variable指定的路径；再搜索默认路径；</li>
+</ul>
+<h2 id="Shared-libraries-and-static-libraries"><a href="#Shared-libraries-and-static-libraries" class="headerlink" title="Shared libraries and static libraries"></a>Shared libraries and static libraries</h2><blockquote>
+<p>因为链接一个动态库可以使得可执行文件的体积更小，并且对动态库进行版本更新不会影响到使用它的可执行文件（只要接口不变），所以，只要有可能，GCC就会默认使用动态链接</p>
+</blockquote>
+<ul>
+<li><strong>default</strong>: 例如，如果GCC同时搜索到了<code>libgdbm.a</code>和<code>libgdbm.so</code>，而编译时使用的是<code>-lgdbm</code>，那么GCC默认链接的是<code>libgdbm.so</code></li>
+<li><strong>增添动态库搜索路径</strong>：1. 设置环境变量<code>LD_LIBRARY_PATH</code></li>
+<li><code>-static</code>: 强制GCC仅使用静态链接</li>
+</ul>
+<h2 id="C-language-standards"><a href="#C-language-standards" class="headerlink" title="C language standards"></a>C language standards</h2><blockquote>
+<p>By default, gcc compiles programs using the GNU dialect of the C language, referred to as GNU C. This dialect incorporates the official ANSI/ISO standard for the C language with several useful GNU extensions, such as nested functions and variable-size arrays.</p>
+</blockquote>
+<blockquote>
+<p>For reference, the non-standard keywords and macros defined by the GNU C extensions are asm, inline, typeof, unix and vax</p>
+</blockquote>
+<ul>
+<li><code>-ansi</code>: 禁用掉GNU C中对于ANSI/ISO C标准的扩展，避免一些ANSI/ISO标准的C程序在GCC上进行编译时可能出现的不兼容的情况<ul>
+<li><strong>注意</strong>：<code>-ansi</code>其实就是<code>-std=c89</code>的同义词</li>
+</ul>
+</li>
+<li><code>-pedantic</code>: 当和<code>-ansi</code>结合的时候，会严格执行ANSI/ISO标准，禁用掉任何GNU C的扩展(真的非常严格)<ul>
+<li>举个例子，GNU C的变长数组，实际上是对ANSI/ISO的后向兼容扩展，其他的标准C程序不会因为GNU C提供了变长数组的支持就无法在GNU C下编译。所以，即使加上了<code>-ansi</code>，照样是能够编译的；但如果再加上了<code>-pedantic</code>，编译器就会迂腐的照搬标准，程序就编译不了了</li>
+<li>作为对比，类似于<code>asm</code>这样的变量，在GNU C下是预先定义好了的，那么这样的程序，虽然在ANSI/ISO中可以编译，但是在GNU C中反而就编译不了了，无法后向兼容。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Additional-warning-options"><a href="#Additional-warning-options" class="headerlink" title="Additional warning options"></a>Additional warning options</h2><ul>
+<li><code>-W</code>: 通常和<code>-Wall</code>一起使用，报告一些常见的潜在问题。（比如判断一个无符号数的正负性）</li>
+<li><code>-Wconversion</code>: 隐式转换可能出现的问题</li>
+<li><code>-Wshadow</code>: 定义了和外部空间同名的局部变量</li>
+<li><code>-Wcast-qual</code>: 强制去除了const这样的修饰符（qualifier）</li>
+<li><code>-Werror</code>: 强制编译器，只要遇到warn，就将其转换为error，使得编译终止</li>
+</ul>
+<h1 id="Using-the-preprocessor"><a href="#Using-the-preprocessor" class="headerlink" title="Using the preprocessor"></a>Using the preprocessor</h1><blockquote>
+<p>Some macros are automatically defined by the compiler—these typically use a reserved namespace beginning with a double-underscore prefix ‘__’.</p>
+</blockquote>
+<ul>
+<li><code>-DName</code>: 利用command line定义一个宏，宏名是<code>Name</code>, 值为1</li>
+<li><code>-DName=&quot;2+4&quot;</code>: 利用command line定义一个宏，宏名是<code>Name</code>, 值为<code>2+4</code></li>
+<li><code>-DName=&quot;&quot;</code>: 利用command line定义一个宏，宏名是<code>Name</code>, 值为空，但依旧已被定义</li>
+<li><code>cpp -dM /dev/null</code>: 展示GCC预定义了哪些macro。<code>/dev/null</code>的意思是分析这个空文件，因此只输出GCC预定义的macro</li>
+<li><code>-E</code>: 在stdout中输出经过预处理器处理之后的文件内容. (The preprocessor also inserts lines recording the source file and line numbers in the form # line-number “source-file”, to aid in debugging and allow the compiler to issue error messages referring to this information.)</li>
+<li><code>-save-temps</code>: 保留预处理后的<code>xxx.i</code>(或者<code>xxx.ii</code>)源文件，编译后的<code>xxx.s</code>汇编代码文件，汇编之后的<code>xxx.o</code>可重定位目标文件。 <code>i</code>是C代码，<code>ii</code>是C++代码</li>
+</ul>
+<h1 id="Compiling-for-debugging"><a href="#Compiling-for-debugging" class="headerlink" title="Compiling for debugging"></a>Compiling for debugging</h1><blockquote>
+<p>The debug option(<code>-g</code>) works by storing the names of functions and variables (and all the references to them), with their corresponding source code line-numbers, in a symbol table in object files and executables.</p>
+</blockquote>
+<p>本章仅对gdb进行了简单的阐述，详细的学习，需要阅读：《Debugging with GDB: The GNU Source-Level Debugger》</p>
+<ul>
+<li><code>$ ulimit -c</code>: 显示系统当前允许产生的core文件的最大大小</li>
+<li><code>$ ulimit -c unlimited</code>: 设置core文件大小无限制<ul>
+<li>设置完毕后，后续执行程序时，如果崩掉，就会生成core文件</li>
+</ul>
+</li>
+<li><code>gdb EXECUTABLE-FILE CORE-FILE</code>: 开始调试。（可执行文件和core文件都必须提供）</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">deref_nullptr</span><span class="params">(<span class="keyword">int</span> *p)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = *p; <span class="comment">// 这里有问题</span></span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span>** argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> *p = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">int</span> x = deref_nullptr(p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;output is %d\n&quot;</span>, x);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 例子</span></span><br><span class="line"><span class="comment"># print 打印变量的值</span></span><br><span class="line"><span class="comment"># backtrace 打印当前状态下的调用栈</span></span><br><span class="line">$ gdb main core</span><br><span class="line">GNU gdb (Ubuntu 9.2-0ubuntu1~20.04) 9.2</span><br><span class="line">Copyright (C) 2020 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br><span class="line">Type <span class="string">&quot;show copying&quot;</span> and <span class="string">&quot;show warranty&quot;</span> <span class="keyword">for</span> details.</span><br><span class="line">This GDB was configured as <span class="string">&quot;x86_64-linux-gnu&quot;</span>.</span><br><span class="line">Type <span class="string">&quot;show configuration&quot;</span> <span class="keyword">for</span> configuration details.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</span><br><span class="line">Find the GDB manual and other documentation resources online at:</span><br><span class="line">    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="line"></span><br><span class="line">For <span class="built_in">help</span>, <span class="built_in">type</span> <span class="string">&quot;help&quot;</span>.</span><br><span class="line">Type <span class="string">&quot;apropos word&quot;</span> to search <span class="keyword">for</span> commands related to <span class="string">&quot;word&quot;</span>...</span><br><span class="line">Reading symbols from main...</span><br><span class="line">[New LWP 1195]</span><br><span class="line">Core was generated by `./main<span class="string">&#x27;.</span></span><br><span class="line"><span class="string">Program terminated with signal SIGSEGV, Segmentation fault.</span></span><br><span class="line"><span class="string">#0  0x0000556e0426c159 in deref_nullptr (p=0x0) at ./gdb_test.cpp:4</span></span><br><span class="line"><span class="string">4           int x = *p;</span></span><br><span class="line"><span class="string">(gdb) print p</span></span><br><span class="line"><span class="string">$1 = (int *) 0x0</span></span><br><span class="line"><span class="string">(gdb) backtrace</span></span><br><span class="line"><span class="string">#0  0x00005555ef33a159 in deref_nullptr (p=0x0) at ./gdb_test.cpp:4</span></span><br><span class="line"><span class="string">#1  0x00005555ef33a18a in main (argc=1, argv=0x7ffd5ed3ee78) at ./gdb_test.cpp:10</span></span><br><span class="line"><span class="string">(gdb)</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Compiling-with-optimization"><a href="#Compiling-with-optimization" class="headerlink" title="Compiling with optimization"></a>Compiling with optimization</h1><h2 id="Source-level-optimization"><a href="#Source-level-optimization" class="headerlink" title="Source-level optimization"></a>Source-level optimization</h2><ul>
+<li><strong>common subexpression elimination</strong>: 利用临时变量存储一些中间值，从而减少运算</li>
+<li><strong>function inlining</strong></li>
+</ul>
+<h2 id="Optimization-level"><a href="#Optimization-level" class="headerlink" title="Optimization level"></a>Optimization level</h2><blockquote>
+<p>optimizations may not necessarily make a program faster in every case.</p>
+</blockquote>
+<p>从0到3:</p>
+<ul>
+<li><code>-O0</code>: 默认级别。编译器不执行任何优化，也不进行指令重排。适合于debug</li>
+<li><code>-O1</code>: 执行一些常用的优化手段，但没有speed-space tradeoff以及指令重排</li>
+<li><code>-O2</code>: 除了O1的手段之后，还加入了指令重排。此外，该级别是最时候发布的级别</li>
+<li><code>-O3</code>: 编译时间最久。可能会增加最终的可执行文件的体积</li>
+<li><code>-Os</code>: 生成体积最小的可执行文件</li>
+</ul>
+<h1 id="Compiling-a-C-program-1"><a href="#Compiling-a-C-program-1" class="headerlink" title="Compiling a C++ program"></a>Compiling a C++ program</h1><p>永远遵守一个规定：C++代码使用g++，而C代码使用gcc</p>
+<h2 id="explicit-template-instantiation"><a href="#explicit-template-instantiation" class="headerlink" title="explicit template instantiation"></a>explicit template instantiation</h2><ul>
+<li><code>-fno-implicit-templates</code>: 默认情况下，在编译过程中，每当使用到了一个模板，编译器对其进行隐式的具现化，而该option的作用就是禁止这个行为。程序中所有需要使用的模板具现化类型，会在另一个显示具现化文件中给出。这样做的好处是，所有模板的具现化类型都只有一个存在</li>
+</ul>
+<h1 id="Platform-specific-options"><a href="#Platform-specific-options" class="headerlink" title="Platform-specific options"></a>Platform-specific options</h1><blockquote>
+<p>Code produced with a specific ‘-march=CPU’ option will be faster but will not run on other processors in the x86 family.</p>
+</blockquote>
+<p>以<code>-m</code>开头的option都是和平台特定的选项</p>
+<ul>
+<li><code>-march=</code>: 指定编译为哪一种特定的处理器指令格式。会更快，但是其他处理器型号就运行不了了</li>
+<li><code>-m32</code>: 生成32位程序（默认是64位）</li>
+</ul>
+<h1 id="Compiler-related-tools"><a href="#Compiler-related-tools" class="headerlink" title="Compiler-related tools"></a>Compiler-related tools</h1><p><code>gcov</code>和<code>gprof</code>不想看了，先放一放</p>
+<h2 id="Creating-a-library-with-the-GNU-archiver"><a href="#Creating-a-library-with-the-GNU-archiver" class="headerlink" title="Creating a library with the GNU archiver"></a>Creating a library with the GNU archiver</h2><ul>
+<li><code>ar cr &lt;library-name&gt; &lt;object-file1 object-file2 ...&gt;</code>: 生成静态库文件，<code>cr</code>的意思是create and replace<ul>
+<li><code>ar t &lt;library-name&gt;</code>: 展示一个静态库中包含有哪些object file</li>
+</ul>
+</li>
+</ul>
+<h1 id="Examining-compiled-flags"><a href="#Examining-compiled-flags" class="headerlink" title="Examining compiled flags"></a>Examining compiled flags</h1><ul>
+<li><code>file</code>: 检测executable file或者object file的一些flag，比如链接类型，LSB还是MSB，在哪类平台上进行编译的，等等；</li>
+<li><code>nm</code>: 获取可执行文件或者object file的符号表<ul>
+<li>当第2列为”T”时，说明对应的函数是已经被定义了的；反之如果是”U”，则说明没有定义</li>
+<li>A complete explanation of the output of nm can be found in the GNU Binutils manual.</li>
+</ul>
+</li>
+<li><code>ldd</code>: 明确可执行文件需要依赖于哪些动态库</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nm 例子</span></span><br><span class="line">$ g++ -Wall -g -o ./main ./simple.cpp</span><br><span class="line">$ nm main</span><br><span class="line">0000000000003d90 d _DYNAMIC</span><br><span class="line">0000000000003f90 d _GLOBAL_OFFSET_TABLE_</span><br><span class="line">0000000000001238 t _GLOBAL__sub_I_main</span><br><span class="line">0000000000002000 R _IO_stdin_used</span><br><span class="line">                 w _ITM_deregisterTMCloneTable</span><br><span class="line">                 w _ITM_registerTMCloneTable</span><br><span class="line">00000000000011eb t _Z41__static_initialization_and_destruction_0ii</span><br><span class="line">                 U _ZNSolsEPFRSoS_E@@GLIBCXX_3.4</span><br><span class="line">                 U _ZNSt8ios_base4InitC1Ev@@GLIBCXX_3.4</span><br><span class="line">                 U _ZNSt8ios_base4InitD1Ev@@GLIBCXX_3.4</span><br><span class="line">0000000000004040 B _ZSt4cout@@GLIBCXX_3.4</span><br><span class="line">                 U _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@@GLIBCXX_3.4</span><br><span class="line">0000000000002004 r _ZStL19piecewise_construct</span><br><span class="line">0000000000004151 b _ZStL8__ioinit</span><br><span class="line">                 U _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@@GLIBCXX_3.4</span><br><span class="line">00000000000021ac r __FRAME_END__</span><br><span class="line">0000000000002014 r __GNU_EH_FRAME_HDR</span><br><span class="line">0000000000004010 D __TMC_END__</span><br><span class="line">0000000000004010 B __bss_start</span><br><span class="line">                 U __cxa_atexit@@GLIBC_2.2.5</span><br><span class="line">                 w __cxa_finalize@@GLIBC_2.2.5</span><br><span class="line">0000000000004000 D __data_start</span><br><span class="line">0000000000001160 t __do_global_dtors_aux</span><br><span class="line">0000000000003d88 d __do_global_dtors_aux_fini_array_entry</span><br><span class="line">0000000000004008 D __dso_handle</span><br><span class="line">0000000000003d78 d __frame_dummy_init_array_entry</span><br><span class="line">                 w __gmon_start__</span><br><span class="line">0000000000003d88 d __init_array_end</span><br><span class="line">0000000000003d78 d __init_array_start</span><br><span class="line">00000000000012d0 T __libc_csu_fini</span><br><span class="line">0000000000001260 T __libc_csu_init</span><br><span class="line">                 U __libc_start_main@@GLIBC_2.2.5</span><br><span class="line">0000000000004010 D _edata</span><br><span class="line">0000000000004158 B _end</span><br><span class="line">00000000000012d8 T _fini</span><br><span class="line">0000000000001000 t _init</span><br><span class="line">00000000000010c0 T _start</span><br><span class="line">0000000000004150 b completed.8060</span><br><span class="line">0000000000004000 W data_start</span><br><span class="line">00000000000010f0 t deregister_tm_clones</span><br><span class="line">00000000000011a0 t frame_dummy</span><br><span class="line">00000000000011a9 T main</span><br><span class="line">0000000000001120 t register_tm_clones</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 例子</span></span><br><span class="line">$ ldd main</span><br><span class="line">        linux-vdso.so.1 (0x00007fff2c7d6000)</span><br><span class="line">        libstdc++.so.6 =&gt; /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fd49d627000)</span><br><span class="line">        libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007fd49d435000)</span><br><span class="line">        libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007fd49d2e6000)</span><br><span class="line">        /lib64/ld-linux-x86-64.so.2 (0x00007fd49d81b000)</span><br><span class="line">        libgcc_s.so.1 =&gt; /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fd49d2cb000)</span><br></pre></td></tr></table></figure>
+
+<h1 id="Further-reading"><a href="#Further-reading" class="headerlink" title="Further reading"></a>Further reading</h1><blockquote>
+<p>The definitive guide to GCC is the official reference manual, “Using GCC”, published by GNU Press:</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">老杜振熙</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wcsjdzz.github.io/2021/08/09/an-introduction-to-gcc-md/">https://wcsjdzz.github.io/2021/08/09/an-introduction-to-gcc-md/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wcsjdzz.github.io" target="_blank">Blooooog~</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/gcc/">gcc</a></div><div class="post_share"><div class="social-share" data-image="/img/doc-cover.svg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/07/24/muduo%E6%BA%90%E7%A0%81%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/"><img class="next-cover" src="/img/doc-cover.svg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">muduo源码深入剖析</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/null" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">老杜振熙</div><div class="author-info__description">或许在此处可以找到你我想要的东西</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wcsjdzz"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">Next plan - http server based on net library</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Convention"><span class="toc-number">1.</span> <span class="toc-text">Convention</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compiling-a-C-program"><span class="toc-number">2.</span> <span class="toc-text">Compiling a C program</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AD%A6%E5%91%8A%E7%9B%B8%E5%85%B3"><span class="toc-number">2.1.</span> <span class="toc-text">警告相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Compiling-files-independently"><span class="toc-number">2.2.</span> <span class="toc-text">Compiling files independently</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linking-with-external-libraries"><span class="toc-number">2.3.</span> <span class="toc-text">Linking with external libraries</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compilation-options"><span class="toc-number">3.</span> <span class="toc-text">Compilation options</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setting-search-paths"><span class="toc-number">3.1.</span> <span class="toc-text">Setting search paths</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shared-libraries-and-static-libraries"><span class="toc-number">3.2.</span> <span class="toc-text">Shared libraries and static libraries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-language-standards"><span class="toc-number">3.3.</span> <span class="toc-text">C language standards</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Additional-warning-options"><span class="toc-number">3.4.</span> <span class="toc-text">Additional warning options</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Using-the-preprocessor"><span class="toc-number">4.</span> <span class="toc-text">Using the preprocessor</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compiling-for-debugging"><span class="toc-number">5.</span> <span class="toc-text">Compiling for debugging</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compiling-with-optimization"><span class="toc-number">6.</span> <span class="toc-text">Compiling with optimization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Source-level-optimization"><span class="toc-number">6.1.</span> <span class="toc-text">Source-level optimization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Optimization-level"><span class="toc-number">6.2.</span> <span class="toc-text">Optimization level</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compiling-a-C-program-1"><span class="toc-number">7.</span> <span class="toc-text">Compiling a C++ program</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#explicit-template-instantiation"><span class="toc-number">7.1.</span> <span class="toc-text">explicit template instantiation</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Platform-specific-options"><span class="toc-number">8.</span> <span class="toc-text">Platform-specific options</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compiler-related-tools"><span class="toc-number">9.</span> <span class="toc-text">Compiler-related tools</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Creating-a-library-with-the-GNU-archiver"><span class="toc-number">9.1.</span> <span class="toc-text">Creating a library with the GNU archiver</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Examining-compiled-flags"><span class="toc-number">10.</span> <span class="toc-text">Examining compiled flags</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Further-reading"><span class="toc-number">11.</span> <span class="toc-text">Further reading</span></a></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/08/09/an-introduction-to-gcc-md/" title="an_introduction_to_gcc.md"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="an_introduction_to_gcc.md"/></a><div class="content"><a class="title" href="/2021/08/09/an-introduction-to-gcc-md/" title="an_introduction_to_gcc.md">an_introduction_to_gcc.md</a><time datetime="2021-08-09T12:42:04.000Z" title="发表于 2021-08-09 20:42:04">2021-08-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/24/muduo%E6%BA%90%E7%A0%81%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/" title="muduo源码深入剖析"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="muduo源码深入剖析"/></a><div class="content"><a class="title" href="/2021/07/24/muduo%E6%BA%90%E7%A0%81%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90/" title="muduo源码深入剖析">muduo源码深入剖析</a><time datetime="2021-07-24T07:34:50.000Z" title="发表于 2021-07-24 15:34:50">2021-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/21/2-%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8/" title="2 空间配置器"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2 空间配置器"/></a><div class="content"><a class="title" href="/2021/07/21/2-%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8/" title="2 空间配置器">2 空间配置器</a><time datetime="2021-07-21T07:32:05.000Z" title="发表于 2021-07-21 15:32:05">2021-07-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/%E5%85%B3%E4%BA%8E%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%80%BC%E5%AF%BB%E6%89%BE%E9%97%AE%E9%A2%98/" title="关于旋转数组的最值寻找问题"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="关于旋转数组的最值寻找问题"/></a><div class="content"><a class="title" href="/2021/07/06/%E5%85%B3%E4%BA%8E%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%80%BC%E5%AF%BB%E6%89%BE%E9%97%AE%E9%A2%98/" title="关于旋转数组的最值寻找问题">关于旋转数组的最值寻找问题</a><time datetime="2021-07-06T05:54:22.000Z" title="发表于 2021-07-06 13:54:22">2021-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/06/redisServer/" title="redisServer"><img src="/img/doc-cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="redisServer"/></a><div class="content"><a class="title" href="/2021/07/06/redisServer/" title="redisServer">redisServer</a><time datetime="2021-07-06T05:53:26.000Z" title="发表于 2021-07-06 13:53:26">2021-07-06</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By 老杜振熙</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
